@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Landing Template — $5 | NovaTech</title>
+  <meta name="description" content="Get a professional, dark-themed business landing page template for just $5. Modern HTML/CSS, fully responsive, 2026 design." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0f;
+      color: #f0f0f5;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      background-image: radial-gradient(circle at 20% 50%, rgba(124,58,237,0.06) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(79,70,229,0.06) 0%, transparent 50%);
+    }
+    .container {
+      max-width: 720px;
+      width: 100%;
+      text-align: center;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 100px;
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(124,58,237,0.2);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #c4b5fd;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    h1 span {
+      background: linear-gradient(135deg, #c4b5fd, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: #a0a0b8;
+      margin-bottom: 40px;
+    }
+    .preview-card {
+      background: #1a1a26;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 40px;
+      text-align: left;
+    }
+    .preview-card h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .feature-list {
+      list-style: none;
+    }
+    .feature-list li {
+      padding: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: #a0a0b8;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list li i {
+      color: #7c3aed;
+      width: 18px;
+      flex-shrink: 0;
+    }
+    .price-box {
+      margin-bottom: 32px;
+    }
+    .price {
+      font-size: 3.5rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+    .price span {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #6b6b80;
+    }
+    .price-note {
+      color: #6b6b80;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+    .paypal-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 30px rgba(124,58,237,0.3);
+      border: none;
+      cursor: pointer;
+      margin-bottom: 24px;
+    }
+    .paypal-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(124,58,237,0.4);
+    }
+    .paypal-btn i { font-size: 1.3rem; }
+    .guarantee {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #6b6b80;
+      font-size: 0.9rem;
+      margin-bottom: 40px;
+    }
+    .guarantee i { color: #10b981; }
+    .how-it-works {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .step {
+      background: #1a1a26;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 24px 16px;
+    }
+    .step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin: 0 auto 12px;
+    }
+    .step h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .step p {
+      font-size: 0.82rem;
+      color: #6b6b80;
+    }
+    .faq {
+      text-align: left;
+      background: #1a1a26;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+    .faq h3 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+    .faq-item {
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-item h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .faq-item p {
+      font-size: 0.88rem;
+      color: #6b6b80;
+    }
+    footer {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: #6b6b80;
+    }
+    footer a { color: #c4b5fd; text-decoration: none; }
+    @media (max-width: 600px) {
+      .how-it-works { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="badge"><i class="fas fa-sparkles"></i> Premium Template</div>
+    <h1>Business Landing <span>Page Template</span></h1>
+    <p class="subtitle">A stunning, dark-themed, production-ready HTML/CSS landing page built with 2026 design trends. Fully responsive — no frameworks needed.</p>
+
+    <div class="preview-card">
+      <h2><i class="fas fa-check-circle" style="color:#7c3aed;margin-right:8px;"></i> What You Get</h2>
+      <ul class="feature-list">
+        <li><i class="fas fa-check"></i> Hero section with animated stats</li>
+        <li><i class="fas fa-check"></i> 6-card features grid with hover effects</li>
+        <li><i class="fas fa-check"></i> CSS-only testimonials carousel (3 slides)</li>
+        <li><i class="fas fa-check"></i> 3-tier pricing table with featured card</li>
+        <li><i class="fas fa-check"></i> Working contact form with validation</li>
+        <li><i class="fas fa-check"></i> 4-column footer with social links</li>
+        <li><i class="fas fa-check"></i> Dark theme with purple/indigo accents</li>
+        <li><i class="fas fa-check"></i> Fully responsive (mobile + tablet + desktop)</li>
+        <li><i class="fas fa-check"></i> Smooth fade-in animations</li>
+        <li><i class="fas fa-check"></i> Font Awesome 6 CDN included</li>
+      </ul>
+    </div>
+
+    <div class="price-box">
+      <div class="price">$5 <span>USD</span></div>
+      <p class="price-note">One-time payment — lifetime access, free updates</p>
+    </div>
+
+    <a href="https://paypal.me/quisware/5" target="_blank" rel="noopener" class="paypal-btn">
+      <i class="fab fa-paypal"></i> Buy Now with PayPal
+    </a>
+
+    <div class="guarantee">
+      <i class="fas fa-shield-halved"></i> 100% Satisfaction Guaranteed
+    </div>
+
+    <div class="how-it-works">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Purchase</h4>
+        <p>Click the PayPal button above</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Download</h4>
+        <p>Get instant access to the template files</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Customize</h4>
+        <p>Edit and launch your landing page</p>
+      </div>
+    </div>
+
+    <div class="faq">
+      <h3>Frequently Asked Questions</h3>
+      <div class="faq-item">
+        <h4>What do I get for $5?</h4>
+        <p>You get the complete HTML/CSS source code — a fully responsive, dark-themed business landing page template with all sections shown above.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Do I need any frameworks or build tools?</h4>
+        <p>No! Pure HTML and CSS — just open index.html in your browser. No npm, no build step, no frameworks required.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Can I use this for commercial projects?</h4>
+        <p>Absolutely. The template is MIT-licensed — use it for personal or commercial projects freely.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Is there a refund policy?</h4>
+        <p>Yes — if you're not satisfied, I'll refund your purchase within 30 days. Just reach out via PayPal.</p>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 <a href="https://paypal.me/quisware/5">NovaTech Templates</a>. Built with ❤️</p>
+    </footer>
+  </div>
+</body>
+</html>

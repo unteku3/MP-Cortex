@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Сгенерировать отчет – MP Cortex</title>
+        <meta
+            name="description"
+            content="Генерируйте аналитические отчеты по вашим магазинам на маркетплейсах с помощью MP Cortex."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <style>
+            /* ===== RESET & BASE ===== */
+            *,
+            *::before,
+            *::after {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --bg-primary: #0a0a0f;
+                --bg-secondary: #12121a;
+                --bg-card: #1a1a26;
+                --bg-card-hover: #222233;
+                --text-primary: #f0f0f5;
+                --text-secondary: #a0a0b8;
+                --text-muted: #6b6b80;
+                --accent: #7c3aed;
+                --accent-hover: #8b5cf6;
+                --accent-subtle: rgba(124, 58, 237, 0.1);
+                --accent-glow: rgba(124, 58, 237, 0.3);
+                --gradient-1: linear-gradient(135deg, #7c3aed, #4f46e5);
+                --gradient-2: linear-gradient(135deg, #7c3aed, #ec4899);
+                --gradient-text: linear-gradient(135deg, #c4b5fd, #7c3aed);
+                --border: rgba(255, 255, 255, 0.06);
+                --border-hover: rgba(255, 255, 255, 0.12);
+                --radius: 16px;
+                --radius-sm: 10px;
+                --radius-lg: 24px;
+                --shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+                --shadow-glow: 0 0 60px rgba(124, 58, 237, 0.15);
+                --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                --max-width: 1200px;
+                --nav-height: 72px;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                font-family:
+                    "Inter",
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    sans-serif;
+                background: var(--bg-primary);
+                color: var(--text-primary);
+                line-height: 1.6;
+                overflow-x: hidden;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            /* ===== SCROLLBAR ===== */
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+            ::-webkit-scrollbar-track {
+                background: var(--bg-primary);
+            }
+            ::-webkit-scrollbar-thumb {
+                background: var(--text-muted);
+                border-radius: 4px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--text-secondary);
+            }
+
+            /* ===== ANIMATED BACKGROUND ===== */
+            .bg-grid {
+                position: fixed;
+                inset: 0;
+                z-index: 0;
+                pointer-events: none;
+                background-image:
+                    radial-gradient(
+                        circle at 20% 50%,
+                        rgba(124, 58, 237, 0.04) 0%,
+                        transparent 50%
+                    ),
+                    radial-gradient(
+                        circle at 80% 20%,
+                        rgba(79, 70, 229, 0.04) 0%,
+                        transparent 50%
+                    ),
+                    radial-gradient(
+                        circle at 50% 80%,
+                        rgba(236, 72, 153, 0.03) 0%,
+                        transparent 50%
+                    );
+            }
+
+            .bg-grid::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background-image:
+                    linear-gradient(
+                        rgba(255, 255, 255, 0.02) 1px,
+                        transparent 1px
+                    ),
+                    linear-gradient(
+                        90deg,
+                        rgba(255, 255, 255, 0.02) 1px,
+                        transparent 1px
+                    );
+                background-size: 60px 60px;
+            }
+
+            /* ===== NAVIGATION ===== */
+            nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                height: var(--nav-height);
+                background: rgba(10, 10, 15, 0.8);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-bottom: 1px solid var(--border);
+            }
+
+            .nav-inner {
+                max-width: var(--max-width);
+                margin: 0 auto;
+                padding: 0 24px;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .logo {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                text-decoration: none;
+                font-weight: 800;
+                font-size: 1.4rem;
+                color: var(--text-primary);
+            }
+
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                background: var(--gradient-1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.1rem;
+                color: white;
+            }
+
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 32px;
+                list-style: none;
+            }
+
+            .nav-links a {
+                text-decoration: none;
+                color: var(--text-secondary);
+                font-size: 0.9rem;
+                font-weight: 500;
+                transition: color var(--transition);
+                position: relative;
+            }
+
+            .nav-links a::after {
+                content: "";
+                position: absolute;
+                bottom: -4px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: var(--gradient-1);
+                transition: width var(--transition);
+                border-radius: 1px;
+            }
+
+            .nav-links a:hover {
+                color: var(--text-primary);
+            }
+            .nav-links a:hover::after {
+                width: 100%;
+            }
+
+            .nav-cta {
+                padding: 10px 24px;
+                border-radius: 8px;
+                background: var(--gradient-1);
+                color: white !important;
+                font-weight: 600;
+                transition:
+                    transform var(--transition),
+                    box-shadow var(--transition);
+            }
+
+            .nav-cta:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 20px var(--accent-glow);
+            }
+            .nav-cta::after {
+                display: none !important;
+            }
+
+            .mobile-toggle {
+                display: none;
+                background: none;
+                border: none;
+                color: var(--text-primary);
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 4px;
+            }
+
+            /* ===== BUTTONS ===== */
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 14px 32px;
+                border-radius: 10px;
+                font-weight: 600;
+                font-size: 0.95rem;
+                font-family: inherit;
+                text-decoration: none;
+                cursor: pointer;
+                border: none;
+                transition: all var(--transition);
+            }
+
+            .btn-primary {
+                background: var(--gradient-1);
+                color: white;
+                box-shadow: 0 4px 24px var(--accent-glow);
+            }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 40px var(--accent-glow);
+            }
+
+            .btn-secondary {
+                background: transparent;
+                color: var(--text-primary);
+                border: 1px solid var(--border-hover);
+            }
+
+            .btn-secondary:hover {
+                background: rgba(255, 255, 255, 0.04);
+                border-color: var(--text-muted);
+            }
+
+            /* ===== MAIN CONTENT ===== */
+            .main-content {
+                position: relative;
+                z-index: 1;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 120px 24px 80px;
+            }
+
+            .content-wrapper {
+                max-width: 800px;
+                text-align: center;
+                width: 100%;
+            }
+
+            .content-wrapper h1 {
+                font-size: clamp(2rem, 5vw, 3rem);
+                font-weight: 900;
+                line-height: 1.1;
+                margin-bottom: 24px;
+                letter-spacing: -0.03em;
+            }
+
+            .content-wrapper h1 .highlight {
+                background: var(--gradient-text);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            .content-wrapper p {
+                font-size: 1.1rem;
+                color: var(--text-secondary);
+                margin-bottom: 40px;
+            }
+
+            /* ===== REPORT FORM ===== */
+            .report-form {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 40px;
+                margin: 40px 0;
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .form-group {
+                margin-bottom: 24px;
+            }
+
+            .form-group label {
+                display: block;
+                font-size: 0.95rem;
+                font-weight: 600;
+                margin-bottom: 8px;
+                color: var(--text-primary);
+            }
+
+            .form-group input,
+            .form-group select {
+                width: 100%;
+                padding: 12px 16px;
+                border-radius: var(--radius-sm);
+                background: var(--bg-primary);
+                border: 1px solid var(--border);
+                color: var(--text-primary);
+                font-family: inherit;
+                font-size: 0.95rem;
+                transition: border-color var(--transition);
+                outline: none;
+            }
+
+            .form-group input:focus,
+            .form-group select:focus {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px var(--accent-subtle);
+            }
+
+            .form-group select {
+                cursor: pointer;
+                height: 44px;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a0a0b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 12px center;
+                background-size: 20px;
+                padding-right: 36px;
+            }
+
+            .form-group select option {
+                background: var(--bg-primary);
+                color: var(--text-primary);
+            }
+
+            .report-form .btn {
+                width: 100%;
+                justify-content: center;
+                margin-top: 8px;
+            }
+
+            /* ===== FOOTER ===== */
+            footer {
+                position: relative;
+                z-index: 1;
+                border-top: 1px solid var(--border);
+                padding: 60px 24px 32px;
+                background: var(--bg-secondary);
+            }
+
+            .footer-inner {
+                max-width: var(--max-width);
+                margin: 0 auto;
+                display: grid;
+                grid-template-columns: 2fr 1fr 1fr 1fr;
+                gap: 48px;
+            }
+
+            .footer-brand .logo {
+                margin-bottom: 16px;
+            }
+            .footer-brand p {
+                color: var(--text-muted);
+                font-size: 0.9rem;
+                line-height: 1.7;
+            }
+
+            .footer-col h4 {
+                font-size: 0.9rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-bottom: 16px;
+                color: var(--text-primary);
+            }
+
+            .footer-col ul {
+                list-style: none;
+            }
+
+            .footer-col ul li {
+                margin-bottom: 10px;
+            }
+
+            .footer-col ul a {
+                text-decoration: none;
+                color: var(--text-muted);
+                font-size: 0.9rem;
+                transition: color var(--transition);
+            }
+
+            .footer-col ul a:hover {
+                color: var(--text-primary);
+            }
+
+            .footer-bottom {
+                max-width: var(--max-width);
+                margin: 40px auto 0;
+                padding-top: 24px;
+                border-top: 1px solid var(--border);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .footer-bottom p {
+                color: var(--text-muted);
+                font-size: 0.85rem;
+            }
+
+            .footer-socials {
+                display: flex;
+                gap: 12px;
+            }
+
+            .footer-socials a {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--text-muted);
+                text-decoration: none;
+                transition: all var(--transition);
+            }
+
+            .footer-socials a:hover {
+                background: var(--accent-subtle);
+                color: var(--accent);
+                border-color: rgba(124, 58, 237, 0.3);
+            }
+
+            /* ===== ANIMATIONS ===== */
+            .fade-in {
+                opacity: 0;
+                transform: translateY(30px);
+                animation: fadeIn 0.7s ease forwards;
+            }
+
+            @keyframes fadeIn {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* ===== RESPONSIVE ===== */
+            @media (max-width: 1024px) {
+                .footer-inner {
+                    grid-template-columns: 1fr 1fr;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .nav-links {
+                    display: none;
+                }
+                .mobile-toggle {
+                    display: block;
+                }
+
+                .nav-links.open {
+                    display: flex;
+                    flex-direction: column;
+                    position: absolute;
+                    top: var(--nav-height);
+                    left: 0;
+                    right: 0;
+                    background: rgba(10, 10, 15, 0.98);
+                    backdrop-filter: blur(20px);
+                    padding: 24px;
+                    gap: 16px;
+                    border-bottom: 1px solid var(--border);
+                }
+
+                .footer-inner {
+                    grid-template-columns: 1fr;
+                    text-align: center;
+                }
+                .footer-bottom {
+                    flex-direction: column;
+                    text-align: center;
+                }
+
+                .report-form {
+                    padding: 30px 20px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .main-content {
+                    padding: 100px 16px 60px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Background -->
+        <div class="bg-grid"></div>
+
+        <!-- ===== NAV ===== -->
+        <nav>
+            <div class="nav-inner">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+                    MP Cortex
+                </a>
+                <button
+                    class="mobile-toggle"
+                    id="mobileToggle"
+                    aria-label="Меню"
+                >
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html#features">Возможности</a></li>
+                    <li><a href="index.html#testimonials">Отзывы</a></li>
+                    <li><a href="index.html#pricing">Тарифы</a></li>
+                    <li><a href="index.html#contact">Контакты</a></li>
+                    <li><a href="report.html">Сгенерировать отчет</a></li>
+                    <li>
+                        <a href="index.html#contact" class="nav-cta">Начать</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <div class="main-content">
+            <div class="content-wrapper fade-in">
+                <h1>Сгенерировать <span class="highlight">отчет</span></h1>
+                <p>Выберите маркетплейс и нишу для анализа.</p>
+
+                <form class="report-form" onsubmit="event.preventDefault(); alert('Отчет в разработке. Скоро эта функция будет доступна.');">
+                    <div class="form-group">
+                        <label for="marketplace">Маркетплейс</label>
+                        <select id="marketplace" name="marketplace" required>
+                            <option value="">Выберите маркетплейс...</option>
+                            <option value="ozon">Озон</option>
+                            <option value="wb">WB (Wildberries)</option>
+                            <option value="yandex">Яндекс Маркет</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="niche">Название ниши</label>
+                        <input type="text" id="niche" name="niche" placeholder="Например: женская обувь, детская одежда" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        Сгенерировать отчет <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <a href="index.html" class="btn btn-primary">
+                    Вернуться на главную <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer>
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+                        MP Cortex
+                    </a>
+                    <p>
+                        ИИ-система управления для селлеров на маркетплейсах.
+                        CEO-агент анализирует данные, находит точки потерь и
+                        ставит задачи команде – без ручного контроля.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Продукт</h4>
+                    <ul>
+                        <li><a href="index.html#features">Возможности</a></li>
+                        <li><a href="index.html#pricing">Тарифы</a></li>
+                        <li><a href="#">Интеграции</a></li>
+                        <li><a href="#">История изменений</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Компания</h4>
+                    <ul>
+                        <li><a href="#">О нас</a></li>
+                        <li><a href="#">Блог</a></li>
+                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="#">Пресс-кит</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Юридическое</h4>
+                    <ul>
+                        <li><a href="#">Политика конфиденциальности</a></li>
+                        <li><a href="#">Условия использования</a></li>
+                        <li><a href="#">Политика cookies</a></li>
+                        <li><a href="#">GDPR</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 MP Cortex. Все права защищены.</p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Twitter"
+                        ><i class="fab fa-twitter"></i
+                    ></a>
+                    <a href="#" aria-label="LinkedIn"
+                        ><i class="fab fa-linkedin-in"></i
+                    ></a>
+                    <a href="#" aria-label="GitHub"
+                        ><i class="fab fa-github"></i
+                    ></a>
+                    <a href="#" aria-label="YouTube"
+                        ><i class="fab fa-youtube"></i
+                    ></a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Mobile nav toggle -->
+        <script>
+            const toggle = document.getElementById("mobileToggle");
+            const navLinks = document.getElementById("navLinks");
+            toggle.addEventListener("click", () => {
+                navLinks.classList.toggle("open");
+                const icon = toggle.querySelector("i");
+                icon.classList.toggle("fa-bars");
+                icon.classList.toggle("fa-times");
+            });
+            navLinks.querySelectorAll("a").forEach((link) => {
+                link.addEventListener("click", () => {
+                    navLinks.classList.remove("open");
+                    const icon = toggle.querySelector("i");
+                    icon.classList.add("fa-bars");
+                    icon.classList.remove("fa-times");
+                });
+            });
+        </script>
+    </body>
+</html>

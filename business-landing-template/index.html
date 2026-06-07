@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MP Cortex – ИИ-директор для вашего магазина на маркетплейсах</title>
+  <meta name="description" content="MP Cortex – многоуровневая система ИИ-агентов для селлеров на Wildberries и Ozon. CEO-агент сам анализирует данные, выявляет точки потерь и распределяет задачи команде." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *,
+    *::before,
+    *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a26;
+      --bg-card-hover: #222233;
+      --text-primary: #f0f0f5;
+      --text-secondary: #a0a0b8;
+      --text-muted: #6b6b80;
+      --accent: #7c3aed;
+      --accent-hover: #8b5cf6;
+      --accent-subtle: rgba(124, 58, 237, 0.1);
+      --accent-glow: rgba(124, 58, 237, 0.3);
+      --gradient-1: linear-gradient(135deg, #7c3aed, #4f46e5);
+      --gradient-2: linear-gradient(135deg, #7c3aed, #ec4899);
+      --gradient-text: linear-gradient(135deg, #c4b5fd, #7c3aed);
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(255, 255, 255, 0.12);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-lg: 24px;
+      --shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+      --shadow-glow: 0 0 60px rgba(124, 58, 237, 0.15);
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --max-width: 1200px;
+      --nav-height: 72px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+    /* ===== ANIMATED BACKGROUND ===== */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(79, 70, 229, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(236, 72, 153, 0.03) 0%, transparent 50%);
+    }
+
+    .bg-grid::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* ===== NAVIGATION ===== */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: var(--nav-height);
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--gradient-1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: white;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color var(--transition);
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gradient-1);
+      transition: width var(--transition);
+      border-radius: 1px;
+    }
+
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-cta {
+      padding: 10px 24px;
+      border-radius: 8px;
+      background: var(--gradient-1);
+      color: white !important;
+      font-weight: 600;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 20px var(--accent-glow); }
+    .nav-cta::after { display: none !important; }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      font-family: inherit;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all var(--transition);
+    }
+
+    .btn-primary {
+      background: var(--gradient-1);
+      color: white;
+      box-shadow: 0 4px 24px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border-hover);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--text-muted);
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 80px;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 100px;
+      background: var(--accent-subtle);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #c4b5fd;
+      margin-bottom: 28px;
+    }
+
+    .hero-badge i { font-size: 0.75rem; }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 7vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .hero h1 .highlight {
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto 40px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 64px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat h3 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .hero-stat p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 4px 0 0;
+    }
+
+    /* ===== SECTION COMMON ===== */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 100px 24px;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 60px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+    }
+
+    .section-label {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 100px;
+      background: var(--accent-subtle);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #c4b5fd;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+
+    /* ===== FEATURES ===== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-1);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition);
+    }
+
+    .feature-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+    }
+
+    .feature-card:hover::before { transform: scaleX(1); }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: var(--accent-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: #c4b5fd;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+
+    /* ===== TESTIMONIALS CAROUSEL (CSS-only) ===== */
+    .testimonials {
+      background: var(--bg-secondary);
+    }
+
+    .carousel {
+      max-width: 800px;
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .carousel-slide {
+      flex: 0 0 100%;
+      padding: 0 16px;
+    }
+
+    .testimonial-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      text-align: center;
+    }
+
+    .testimonial-stars {
+      color: #f59e0b;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      letter-spacing: 4px;
+    }
+
+    .testimonial-text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-bottom: 28px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .testimonial-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--gradient-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: white;
+    }
+
+    .testimonial-info h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .testimonial-info p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Carousel controls */
+    .carousel-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .carousel-label {
+      display: block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      cursor: pointer;
+      transition: all var(--transition);
+      border: 2px solid transparent;
+    }
+
+    .carousel-label:hover { background: var(--text-secondary); }
+
+    #slide-1:checked ~ .carousel .carousel-track { transform: translateX(0); }
+    #slide-2:checked ~ .carousel .carousel-track { transform: translateX(-100%); }
+    #slide-3:checked ~ .carousel .carousel-track { transform: translateX(-200%); }
+
+    #slide-1:checked ~ .carousel-controls label[for="slide-1"],
+    #slide-2:checked ~ .carousel-controls label[for="slide-2"],
+    #slide-3:checked ~ .carousel-controls label[for="slide-3"] {
+      background: var(--accent);
+      border-color: var(--accent-glow);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .carousel-input { display: none; }
+
+    /* ===== PRICING ===== */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      text-align: center;
+      transition: all var(--transition);
+      position: relative;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-hover);
+    }
+
+    .pricing-card.featured {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.06), rgba(79, 70, 229, 0.06));
+      border-color: rgba(124, 58, 237, 0.3);
+      transform: scale(1.04);
+    }
+
+    .pricing-card.featured:hover { transform: scale(1.04) translateY(-4px); }
+
+    .pricing-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 100px;
+      background: var(--gradient-1);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+    }
+
+    .pricing-card h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .pricing-card .subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .pricing-price {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .pricing-price span {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .pricing-duration {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 28px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 32px;
+    }
+
+    .pricing-features li {
+      padding: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pricing-features li:last-child { border-bottom: none; }
+
+    .pricing-features li i {
+      color: var(--accent);
+      font-size: 0.85rem;
+      width: 18px;
+      flex-shrink: 0;
+    }
+
+    .pricing-card .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* ===== CONTACT ===== */
+    .contact {
+      background: var(--bg-secondary);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    .contact-info h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .contact-info > p {
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .contact-detail {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .contact-detail i {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--accent-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c4b5fd;
+      flex-shrink: 0;
+    }
+
+    .contact-detail h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .contact-detail p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .contact-form {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color var(--transition);
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-subtle);
+    }
+
+    .form-group select {
+      height: 48px;
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .contact-form .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 60px 24px 32px;
+      background: var(--bg-secondary);
+    }
+
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+    }
+
+    .footer-brand .logo { margin-bottom: 16px; }
+    .footer-brand p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .footer-col h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-col ul a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      transition: color var(--transition);
+    }
+
+    .footer-col ul a:hover { color: var(--text-primary); }
+
+    .footer-bottom {
+      max-width: var(--max-width);
+      margin: 40px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-bottom p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-socials a {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+
+    .footer-socials a:hover {
+      background: var(--accent-subtle);
+      color: var(--accent);
+      border-color: rgba(124, 58, 237, 0.3);
+    }
+
+    /* ===== ANIMATIONS ===== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeIn 0.7s ease forwards;
+    }
+
+    .fade-in-delay-1 { animation-delay: 0.1s; }
+    .fade-in-delay-2 { animation-delay: 0.2s; }
+    .fade-in-delay-3 { animation-delay: 0.3s; }
+    .fade-in-delay-4 { animation-delay: 0.4s; }
+
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .float { animation: float 4s ease-in-out infinite; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .mobile-toggle { display: block; }
+
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: var(--nav-height);
+        left: 0;
+        right: 0;
+        background: rgba(10, 10, 15, 0.98);
+        backdrop-filter: blur(20px);
+        padding: 24px;
+        gap: 16px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .hero-stats { gap: 28px; }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .pricing-card.featured {
+        transform: none;
+      }
+      .pricing-card.featured:hover { transform: translateY(-4px); }
+
+      .footer-inner { grid-template-columns: 1fr; text-align: center; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      section { padding: 60px 16px; }
+      .hero { padding: 100px 16px 60px; }
+      .pricing-card { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="bg-grid"></div>
+
+  <!-- ===== NAV ===== -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+        MP Cortex
+      </a>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Меню">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#features">Возможности</a></li>
+        <li><a href="#testimonials">Отзывы</a></li>
+        <li><a href="#pricing">Тарифы</a></li>
+        <li><a href="#contact">Контакты</a></li>
+        <li><a href="report.html">Сгенерировать отчет</a></li>
+        <li><a href="#contact" class="nav-cta">Начать</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-badge fade-in">
+        <i class="fas fa-sparkles"></i> Ранний доступ
+      </div>
+      <h1 class="fade-in fade-in-delay-1">
+        Ваш ИИ-помощник для <span class="highlight">маркетплейсов</span>
+      </h1>
+      <p class="fade-in fade-in-delay-2">
+        MP Cortex собирает данные из WB, Ozon, MPSTATS и рекламного кабинета в одну точку. CEO-агент анализирует, находит точки потерь и сам говорит команде – что делать и к какому сроку.
+      </p>
+      <div class="hero-buttons fade-in fade-in-delay-3">
+        <a href="#contact" class="btn btn-primary">
+          Начать бесплатно <i class="fas fa-arrow-right"></i>
+        </a>
+        <a href="#features" class="btn btn-secondary">
+          Узнать больше <i class="fas fa-chevron-right"></i>
+        </a>
+      </div>
+      <div class="hero-stats fade-in fade-in-delay-4">
+        <div class="hero-stat">
+          <h3>10+</h3>
+          <p>Источников данных</p>
+        </div>
+        <div class="hero-stat">
+          <h3>24/7</h3>
+          <p>Автомониторинг</p>
+        </div>
+        <div class="hero-stat">
+          <h3>4.9★</h3>
+          <p>Средняя оценка</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section id="features">
+    <div class="section-header fade-in">
+      <span class="section-label">Возможности</span>
+      <h2>Все необходимое для масштабирования</h2>
+      <p>Мощные инструменты для ускорения роста бизнеса и оптимизации операций на маркетплейсах.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card fade-in fade-in-delay-1">
+        <div class="feature-icon"><i class="fas fa-robot"></i></div>
+        <h3>CEO-агент</h3>
+        <p>Видит картину целиком: получает выводы от каждого тим-лида, кросс-проверяет их и принимает управленческие решения – сам.</p>
+      </div>
+      <div class="feature-card fade-in fade-in-delay-2">
+        <div class="feature-icon"><i class="fas fa-database"></i></div>
+        <h3>Единый источник данных</h3>
+        <p>WB, Ozon, MPSTATS, рекламный кабинет, МойСклад, банковские выписки – все потоки нормализуются в одной точке.</p>
+      </div>
+      <div class="feature-card fade-in fade-in-delay-3">
+        <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
+        <h3>Агентная иерархия</h3>
+        <p>Исполнители тянут данные, тим-лиды анализируют свое направление, CEO-агент сводит выводы и принимает решения.</p>
+      </div>
+      <div class="feature-card fade-in fade-in-delay-1">
+        <div class="feature-icon"><i class="fas fa-comments"></i></div>
+        <h3>Telegram-интерфейс</h3>
+        <p>Команда не видит ни Claude, ни VPN. Просто бот в Telegram: собственник спрашивает – получает разбор и план.</p>
+      </div>
+      <div class="feature-card fade-in fade-in-delay-2">
+        <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+        <h3>Ролевой доступ</h3>
+        <p>У собственника полная картина. У каждого сотрудника – только его зона: закупки, реклама, контент.</p>
+      </div>
+      <div class="feature-card fade-in fade-in-delay-3">
+        <div class="feature-icon"><i class="fas fa-list-check"></i></div>
+        <h3>Умное распределение задач</h3>
+        <p>CEO-агент видит загрузку команды и сам ставит задачи: менеджеру закупок, маркетологу, контент-менеджеру – с четкой формулировкой и дедлайном.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section id="testimonials" class="testimonials">
+    <div class="section-header fade-in">
+      <span class="section-label">Отзывы</span>
+      <h2>Нам доверяют лидеры индустрии</h2>
+      <p>Посмотрите, что говорят наши клиенты об опыте работы с MP Cortex.</p>
+    </div>
+
+    <input type="radio" name="slide" id="slide-1" class="carousel-input" checked />
+    <input type="radio" name="slide" id="slide-2" class="carousel-input" />
+    <input type="radio" name="slide" id="slide-3" class="carousel-input" />
+
+    <div class="carousel">
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <div class="testimonial-card">
+            <div class="testimonial-stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-text">
+              «CEO-агент за первую неделю нашел три SKU с отрицательной маржой – мы их даже не замечали. Сэкономили больше, чем заплатили за год подписки.»
+            </p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">АМ</div>
+              <div class="testimonial-info">
+                <h4>Алексей Морозов</h4>
+                <p>Владелец магазина, WB топ-500</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="testimonial-card">
+            <div class="testimonial-stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-text">
+              «Раньше я каждое утро вручную смотрел рекламные кабинеты. Теперь агент сам видит, что отключить, что масштабировать, и просто говорит мне итог. Это другой уровень.»
+            </p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">МС</div>
+              <div class="testimonial-info">
+                <h4>Марина Соколова</h4>
+                <p>Операционный директор, 3 магазина на Ozon</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="testimonial-card">
+            <div class="testimonial-stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <p class="testimonial-text">
+              «Мы подключили MP Cortex за один вечер. На следующий день агент уже распределил задачи команде – с обоснованием и сроками. Менеджеры не задавали вопросов.»
+            </p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">ДВ</div>
+              <div class="testimonial-info">
+                <h4>Дмитрий Волков</h4>
+                <p>Основатель бренда, WB + Ozon</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="carousel-controls">
+      <label for="slide-1" class="carousel-label" aria-label="Go to slide 1"></label>
+      <label for="slide-2" class="carousel-label" aria-label="Go to slide 2"></label>
+      <label for="slide-3" class="carousel-label" aria-label="Go to slide 3"></label>
+    </div>
+  </section>
+
+  <!-- ===== PRICING ===== -->
+  <section id="pricing">
+    <div class="section-header fade-in">
+      <span class="section-label">Тарифы</span>
+      <h2>Простые и прозрачные тарифы</h2>
+      <p>Выберите подходящий план. Без скрытых платежей, отмена в любой момент.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card fade-in fade-in-delay-1">
+        <h3>Стартовый</h3>
+        <p class="subtitle">Для небольших магазинов</p>
+        <div class="pricing-price">₽4 990 <span>/мес</span></div>
+        <p class="pricing-duration">Ежемесячная оплата</p>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check"></i> 1 магазин, 1 маркетплейс</li>
+          <li><i class="fas fa-check"></i> До 200 активных SKU</li>
+          <li><i class="fas fa-check"></i> CEO-агент (еженедельный отчет)</li>
+          <li><i class="fas fa-check"></i> Подключение MPSTATS</li>
+          <li><i class="fas fa-check"></i> Telegram-бот для собственника</li>
+        </ul>
+        <a href="#" class="btn btn-secondary">Начать</a>
+      </div>
+
+      <div class="pricing-card featured fade-in fade-in-delay-2">
+        <div class="pricing-badge">Самый популярный</div>
+        <h3>Профессиональный</h3>
+        <p class="subtitle">Для растущего бизнеса</p>
+        <div class="pricing-price">₽12 990 <span>/мес</span></div>
+        <p class="pricing-duration">Ежемесячная оплата</p>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check"></i> До 3 магазинов, WB + Ozon</li>
+          <li><i class="fas fa-check"></i> До 1 000 SKU</li>
+          <li><i class="fas fa-check"></i> CEO-агент + тим-лиды</li>
+          <li><i class="fas fa-check"></i> Интеграция рекламного кабинета</li>
+          <li><i class="fas fa-check"></i> Ролевой доступ для команды (до 10)</li>
+          <li><i class="fas fa-check"></i> Приоритетная поддержка</li>
+        </ul>
+        <a href="#" class="btn btn-primary">Начать</a>
+      </div>
+
+      <div class="pricing-card fade-in fade-in-delay-3">
+        <h3>Корпоративный</h3>
+        <p class="subtitle">Для крупных продавцов</p>
+        <div class="pricing-price">₽29 990 <span>/мес</span></div>
+        <p class="pricing-duration">Ежемесячная оплата</p>
+        <ul class="pricing-features">
+          <li><i class="fas fa-check"></i> Неограниченно магазинов и SKU</li>
+          <li><i class="fas fa-check"></i> WB + Ozon + Яндекс.Маркет</li>
+          <li><i class="fas fa-check"></i> Полная агентная иерархия</li>
+          <li><i class="fas fa-check"></i> Интеграция Bitrix / Ugile</li>
+          <li><i class="fas fa-check"></i> Банковские выписки и кешфлоу</li>
+          <li><i class="fas fa-check"></i> Локальные модели</li>
+        </ul>
+        <a href="#" class="btn btn-secondary">Связаться с отделом продаж</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact" class="contact">
+    <div class="section-header fade-in">
+      <span class="section-label">Контакты</span>
+      <h2>Свяжитесь с нами</h2>
+      <p>Есть вопросы? Мы рады помочь. Отправьте сообщение – ответим быстро.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info fade-in fade-in-delay-1">
+        <h3>Подключите ИИ-директора к своему магазину</h3>
+        <p>Оставьте заявку на демо – покажем, как CEO-агент работает на реальных данных вашего магазина. Отвечаем в течение 24 часов.</p>
+        <div class="contact-detail">
+          <i class="fas fa-envelope"></i>
+          <div>
+            <h4>Электронная почта</h4>
+            <p>hello@mpcortex.ai</p>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <i class="fas fa-phone"></i>
+          <div>
+            <h4>Телефон</h4>
+            <p>+7 (495) 123-45-67</p>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <i class="fas fa-location-dot"></i>
+          <div>
+            <h4>Офис</h4>
+            <p>Москва, Россия</p>
+          </div>
+        </div>
+      </div>
+      <form class="contact-form fade-in fade-in-delay-2" onsubmit="event.preventDefault(); alert('Спасибо за обращение! Мы скоро ответим.');">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Полное имя</label>
+            <input type="text" id="name" placeholder="Иван Иванов" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email-адрес</label>
+            <input type="email" id="email" placeholder="ivan@example.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="subject">Тема</label>
+          <select id="subject">
+            <option value="">Выберите тему...</option>
+            <option value="general">Общий вопрос</option>
+            <option value="sales">Продажи и тарифы</option>
+            <option value="support">Техническая поддержка</option>
+            <option value="partnership">Партнерство</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Сообщение</label>
+          <textarea id="message" placeholder="Расскажите о вашем проекте..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          Отправить сообщение <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+          MP Cortex
+        </a>
+        <p>ИИ-система управления для селлеров на маркетплейсах. CEO-агент анализирует данные, находит точки потерь и ставит задачи команде – без ручного контроля.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Продукт</h4>
+        <ul>
+          <li><a href="#">Возможности</a></li>
+          <li><a href="#">Тарифы</a></li>
+          <li><a href="#">Интеграции</a></li>
+          <li><a href="#">История изменений</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Компания</h4>
+        <ul>
+          <li><a href="#">О нас</a></li>
+          <li><a href="#">Блог</a></li>
+          <li><a href="#">Вакансии</a></li>
+          <li><a href="#">Пресс-кит</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Юридическое</h4>
+        <ul>
+          <li><a href="#">Политика конфиденциальности</a></li>
+          <li><a href="#">Условия использования</a></li>
+          <li><a href="#">Политика cookies</a></li>
+          <li><a href="#">GDPR</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MP Cortex. Все права защищены.</p>
+      <div class="footer-socials">
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile nav toggle -->
+  <script>
+    const toggle = document.getElementById('mobileToggle');
+    const navLinks = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+      const icon = toggle.querySelector('i');
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-times');
+    });
+    // Close mobile nav on link click
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        const icon = toggle.querySelector('i');
+        icon.classList.add('fa-bars');
+        icon.classList.remove('fa-times');
+      });
+    });
+
+    // Keyboard navigation for testimonials carousel
+    const slides = document.querySelectorAll('.carousel-input');
+    let lastSlideTime = 0;
+    const slideDelay = 600;
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      const now = Date.now();
+      if (now - lastSlideTime < slideDelay) return;
+      lastSlideTime = now;
+      const current = [...slides].findIndex(s => s.checked);
+      const total = slides.length;
+      const next = e.key === 'ArrowRight'
+        ? (current + 1) % total
+        : (current - 1 + total) % total;
+      slides[next].checked = true;
+    });
+  </script>
+</body>
+</html>
